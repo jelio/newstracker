@@ -8,11 +8,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public abstract class IParserA implements IParser {
-	public final String CHARSET = "utf-8";
+	public String CHARSET = "utf-8";
 
 	@Override
 	public String fetchContent(String url) throws IOException {
-		return IOUtils.toString((new URL(url)).openStream(), CHARSET);
+		return IOUtils.toString((new URL(url)).openStream(), this.CHARSET);
 	}
 
 	@Override
