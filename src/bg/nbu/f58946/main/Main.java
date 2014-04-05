@@ -1,8 +1,11 @@
 package bg.nbu.f58946.main;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.jsoup.nodes.Document;
+
+import com.twmacinta.util.MD5;
 
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.parsers.Feeders;
@@ -15,9 +18,18 @@ public class Main {
 
 	public static void main(String[] args) throws IOException,
 			BusinessException {
-		testSega();
+		testMd5();
 	}
 
+	static void testMd5() throws UnsupportedEncodingException {		
+		String url = "http://www.segabg.com/article.php?id=691926" ; 
+		MD5 md5 = new MD5() ; 
+		md5.Update(url,"UTF8");		
+		String hash = md5.asHex() ; 
+		System.out.println(hash.toUpperCase());
+	}
+	
+	
 	static void testSega() throws IOException, BusinessException {
 		String url = "http://www.segabg.com/article.php?id=691926";
 
