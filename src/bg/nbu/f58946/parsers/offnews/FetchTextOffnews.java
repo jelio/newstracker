@@ -12,7 +12,7 @@ public class FetchTextOffnews implements IFetchText {
 
 	@Override
 	public String getArticleText(Document doc) throws BusinessException {
-		Elements matchedArticles = doc.getElementsByClass(className);
+		Elements matchedArticles = doc.select("div." + className);
 
 		if (matchedArticles.size() > 0) {
 			Element element = matchedArticles.get(0);
@@ -27,5 +27,9 @@ public class FetchTextOffnews implements IFetchText {
 		}
 		throw new BusinessException();
 	}
-
+	
+	@Override
+	public String getTitle(Document doc) throws BusinessException {
+		return "";
+	}
 }

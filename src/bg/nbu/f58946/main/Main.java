@@ -1,21 +1,21 @@
 package bg.nbu.f58946.main;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,30 +23,43 @@ import org.jsoup.select.Elements;
 
 import bg.nbu.f58946.database.MyDataSource;
 import bg.nbu.f58946.exceptions.BusinessException;
+import bg.nbu.f58946.http.MyHttpClient;
+import bg.nbu.f58946.jobs.dnevnik.JobDnevnik;
 import bg.nbu.f58946.parsers.Feeders;
 import bg.nbu.f58946.parsers.FetchTextFactory;
 import bg.nbu.f58946.parsers.IFetchText;
 import bg.nbu.f58946.parsers.IParser;
 import bg.nbu.f58946.parsers.ParserFactory;
+import bg.nbu.f58946.tests.Content;
 
 import com.sun.syndication.io.FeedException;
-import com.twmacinta.util.MD5;
 
 public class Main {
-
+	public static Map<Feeders,Map<String,Content>> linkMap= new HashMap<Feeders,Map<String,Content>>(); 
+	static final Logger logger = Logger.getLogger(Main.class);
+	
 	public static void main(String[] args) throws IOException,
 			BusinessException, IllegalArgumentException, FeedException {
-		testMysql();
+
+//		Runnable r = new Collection();
+//		(new Thread(r, "TCollectionTest")).start();
+		
+		logger.trace("Trace message");
+		logger.info("Start program");
+		logger.debug("Debug message");
+		getAllNewsDnevnik();
+		logger.error("Program exit");
+		logger.fatal("End of program");; 
 	}
 
 	static void testMysql() {
 		String query = "SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'nbu'";
 
 		try {
-				
-		
-			Connection connection = MyDataSource.getInstance("").getConnection() ; 
-			
+
+			Connection connection = MyDataSource.getInstance("")
+					.getConnection();
+
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
@@ -54,7 +67,7 @@ public class Main {
 				System.out.println("Table name : " + tableName);
 			}
 			connection.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (BusinessException e) {
@@ -68,11 +81,7 @@ public class Main {
 		String sUrl = "http://dnes.dir.bg/";
 		String baseUrl = "http://dnes.dir.bg/";
 
-		HttpClient httpClient = HttpClients
-				.custom()
-				.setUserAgent(
-						"Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36")
-				.build();
+		HttpClient httpClient = (new MyHttpClient()).getHttpClient();
 
 		CloseableHttpResponse httpResponse = (CloseableHttpResponse) httpClient
 				.execute(new HttpGet(sUrl));
@@ -144,7 +153,7 @@ public class Main {
 
 	static void getAllSega() throws MalformedURLException, IOException {
 		String url = "http://www.segabg.com/index.php?sid=2";
-		String baseUrl = "http://www.segabg.com/";
+		// String baseUrl = "http://www.segabg.com/";
 
 		String rowHTML = IOUtils.toString((new URL(url)).openStream(), "utf-8");
 		Document document = Jsoup.parse(rowHTML);
@@ -164,36 +173,8 @@ public class Main {
 	}
 
 	static void getAllNewsDnevnik() throws MalformedURLException, IOException {
-		String url = "http://www.dnevnik.bg/allnews/today/";
-		String baseUrl = "http://www.dnevnik.bg";
-
-		String rowHTML = IOUtils.toString((new URL(url)).openStream(), "utf-8");
-		Document document = Jsoup.parse(rowHTML);
-		Elements matchedArticles = document.getElementsByClass("info");
-
-		for (Element element : matchedArticles) {
-			// System.out.println(element);
-
-			Elements anchors = element.getElementsByTag("a");
-			if (anchors.size() > 0) {
-				Element myLink = anchors.get(0);
-				String href = myLink.attr("href");
-				System.out.println(baseUrl + href);
-			}
-			// System.out.println(anchors);
-			// System.out.println("----------------");
-			// break ;
-		}
-		// System.out.println(matchedArticles);
-
-	}
-
-	static void testMd5() throws UnsupportedEncodingException {
-		String url = "http://www.segabg.com/article.php?id=691926";
-		MD5 md5 = new MD5();
-		md5.Update(url, "UTF8");
-		String hash = md5.asHex();
-		System.out.println(hash.toUpperCase());
+		Runnable r = new JobDnevnik((new MyHttpClient()).getHttpClient());
+		new Thread(r, "TDnevnik").start();
 	}
 
 	static void testSega() throws IOException, BusinessException {
@@ -246,21 +227,6 @@ public class Main {
 
 		IParser myParser = ParserFactory.getParser(Feeders.DIRBG, url);
 		IFetchText fetcher = FetchTextFactory.fetchText(Feeders.DIRBG);
-
-		String html = myParser.fetchContent(url);
-		Document doc = myParser.parseHTML(html);
-
-		String text = fetcher.getArticleText(doc);
-
-		System.out.println(text);
-
-	}
-
-	static void testDnevnik() throws IOException, BusinessException {
-		String url = "http://www.dnevnik.bg/bulgaria/2014/03/23/2266770_borisov_kolkoto_po-dobur_stavam_i_iskam_mir_da_ima/";
-
-		IParser myParser = ParserFactory.getParser(Feeders.DNEVNIK, url);
-		IFetchText fetcher = FetchTextFactory.fetchText(Feeders.DNEVNIK);
 
 		String html = myParser.fetchContent(url);
 		Document doc = myParser.parseHTML(html);

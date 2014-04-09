@@ -11,11 +11,15 @@ public class FetchTextDir implements IFetchText {
 
 	@Override
 	public String getArticleText(Document doc) throws BusinessException {
-		Elements matchedArticles = doc.getElementsByClass(className);
+		Elements matchedArticles = doc.select("." + className);
 		if (matchedArticles.size() > 0) {
 			return matchedArticles.get(0).text();
 		}
 		throw new BusinessException();
 	}
 
+	@Override
+	public String getTitle(Document doc) throws BusinessException {
+		return "";
+	}
 }

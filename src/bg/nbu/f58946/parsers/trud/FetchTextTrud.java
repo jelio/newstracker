@@ -17,4 +17,9 @@ public class FetchTextTrud implements IFetchText {
 		}
 		throw new BusinessException();
 	}
+	
+	@Override
+	public String getTitle(Document doc) throws BusinessException {
+		return "";
+	}
 }
