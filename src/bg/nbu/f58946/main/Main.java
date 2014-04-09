@@ -1,10 +1,27 @@
 package bg.nbu.f58946.main;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 
+import javax.swing.text.html.HTML;
+
+import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
 import com.twmacinta.util.MD5;
 
 import bg.nbu.f58946.exceptions.BusinessException;
@@ -17,19 +34,134 @@ import bg.nbu.f58946.parsers.ParserFactory;
 public class Main {
 
 	public static void main(String[] args) throws IOException,
-			BusinessException {
-		testMd5();
+			BusinessException, IllegalArgumentException, FeedException {
+		getAllDir();
 	}
 
-	static void testMd5() throws UnsupportedEncodingException {		
-		String url = "http://www.segabg.com/article.php?id=691926" ; 
-		MD5 md5 = new MD5() ; 
-		md5.Update(url,"UTF8");		
-		String hash = md5.asHex() ; 
-		System.out.println(hash.toUpperCase());
+	static void getAllDir() throws MalformedURLException, IOException, IllegalArgumentException, FeedException {
+		String sUrl = "http://dnes.dir.bg/support/cat_rss.php?section=all";
+		String baseUrl = "http://dnes.dir.bg/";
+
+		URL url = new URL(sUrl) ; 
+		
+		SyndFeedInput input = new SyndFeedInput();
+        SyndFeed feed = input.build(new XmlReader(url.openStream()));
+		
+        System.out.println(feed);
+        
+        @SuppressWarnings("unchecked")
+		List<SyndEntryImpl> entries = feed.getEntries();
+        Iterator<SyndEntryImpl> itEntries = entries.iterator();
+ 
+        while (itEntries.hasNext()) {
+            SyndEntry entry = itEntries.next();
+            System.out.println("Title: " + entry.getTitle());
+            System.out.println("Link: " + entry.getLink());
+            System.out.println("Author: " + entry.getAuthor());
+            System.out.println("Publish Date: " + entry.getPublishedDate());
+            System.out.println("Description: " + entry.getDescription().getValue());
+            System.out.println();
+        }
+		
 	}
 	
-	
+	static void getAllTrud() throws MalformedURLException, IOException {
+		String url = "http://www.trud.bg/Rubric.asp?RubricId=439";
+		String baseUrl = "http://www.trud.bg";
+
+		String rowHTML = IOUtils.toString((new URL(url)).openStream(), "utf-8");
+		Document document = Jsoup.parse(rowHTML);
+		String mainNewsHref = document.select(".main-new-article > h1 > a")
+				.attr("href");
+		System.out.println(baseUrl + mainNewsHref);
+
+		Elements elements = document.select(".news > a");
+
+		for (Element element : elements) {
+			String href = element.attr("href");
+			System.out.println(baseUrl + href);
+		}
+
+	}
+
+	static void getAllOffnews() throws MalformedURLException, IOException {
+		String url = "http://offnews.bg/news/%D0%9D%D0%BE%D0%B2%D0%B8%D0%BD%D0%B8_2/";
+		String baseUrl = "http://offnews.bg";
+
+		String rowHTML = IOUtils.toString((new URL(url)).openStream(), "utf-8");
+		Document document = Jsoup.parse(rowHTML);
+		Elements matchedArticles = document
+				.getElementsByClass("cat_list_s_title");
+
+		for (Element element : matchedArticles) {
+			Elements anchors = element.getElementsByTag("a");
+			if (anchors.size() > 0) {
+				Element myLink = anchors.get(0);
+				String href = myLink.attr("href");
+				System.out.println(baseUrl + href);
+			}
+		}
+
+	}
+
+	static void getAllSega() throws MalformedURLException, IOException {
+		String url = "http://www.segabg.com/index.php?sid=2";
+		String baseUrl = "http://www.segabg.com/";
+
+		String rowHTML = IOUtils.toString((new URL(url)).openStream(), "utf-8");
+		Document document = Jsoup.parse(rowHTML);
+		Elements matchedArticles = document.getElementsByClass("a_title");
+
+		for (Element element : matchedArticles) {
+			// System.out.println(element);
+
+			Elements anchors = element.getElementsByTag("a");
+			if (anchors.size() > 0) {
+				Element myLink = anchors.get(0);
+				String href = myLink.attr("href");
+				System.out.println(href);
+			}
+			// System.out.println(anchors);
+			// System.out.println("----------------");
+			// break ;
+		}
+		// System.out.println(matchedArticles);
+
+	}
+
+	static void getAllNewsDnevnik() throws MalformedURLException, IOException {
+		String url = "http://www.dnevnik.bg/allnews/today/";
+		String baseUrl = "http://www.dnevnik.bg";
+
+		String rowHTML = IOUtils.toString((new URL(url)).openStream(), "utf-8");
+		Document document = Jsoup.parse(rowHTML);
+		Elements matchedArticles = document.getElementsByClass("info");
+
+		for (Element element : matchedArticles) {
+			// System.out.println(element);
+
+			Elements anchors = element.getElementsByTag("a");
+			if (anchors.size() > 0) {
+				Element myLink = anchors.get(0);
+				String href = myLink.attr("href");
+				System.out.println(baseUrl + href);
+			}
+			// System.out.println(anchors);
+			// System.out.println("----------------");
+			// break ;
+		}
+		// System.out.println(matchedArticles);
+
+	}
+
+	static void testMd5() throws UnsupportedEncodingException {
+		String url = "http://www.segabg.com/article.php?id=691926";
+		MD5 md5 = new MD5();
+		md5.Update(url, "UTF8");
+		String hash = md5.asHex();
+		System.out.println(hash.toUpperCase());
+	}
+
 	static void testSega() throws IOException, BusinessException {
 		String url = "http://www.segabg.com/article.php?id=691926";
 
