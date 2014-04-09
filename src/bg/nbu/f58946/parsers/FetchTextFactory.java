@@ -1,6 +1,6 @@
 package bg.nbu.f58946.parsers;
 
-import bg.nbu.f58946.parsers.bnt.FetchTextBnt;
+import bg.nbu.f58946.parsers.dir.FetchTextDir;
 import bg.nbu.f58946.parsers.dnevnik.FetchTextDnevnik;
 import bg.nbu.f58946.parsers.offnews.FetchTextOffnews;
 import bg.nbu.f58946.parsers.sega.FetchTextSega;
@@ -12,8 +12,8 @@ public class FetchTextFactory {
 		switch (feed) {
 		case DNEVNIK:
 			return new FetchTextDnevnik();
-		case BNTBG:
-			return new FetchTextBnt();
+		case DIRBG:
+			return new FetchTextDir();
 		case SEGA:
 			return new FetchTextSega();
 		case TRUD:

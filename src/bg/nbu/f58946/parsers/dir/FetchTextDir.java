@@ -1,4 +1,4 @@
-package bg.nbu.f58946.parsers.bnt;
+package bg.nbu.f58946.parsers.dir;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -6,7 +6,7 @@ import org.jsoup.select.Elements;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.parsers.IFetchText;
 
-public class FetchTextBnt implements IFetchText {
+public class FetchTextDir implements IFetchText {
 	private static final String className = "textt";
 
 	@Override

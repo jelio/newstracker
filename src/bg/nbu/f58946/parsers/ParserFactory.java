@@ -1,6 +1,6 @@
 package bg.nbu.f58946.parsers;
 
-import bg.nbu.f58946.parsers.bnt.ParserBnt;
+import bg.nbu.f58946.parsers.dir.ParserDir;
 import bg.nbu.f58946.parsers.dnevnik.ParserDnevnik;
 import bg.nbu.f58946.parsers.offnews.ParserOffnews;
 import bg.nbu.f58946.parsers.sega.ParserSega;
@@ -11,8 +11,8 @@ public class ParserFactory {
 		switch (feed) {
 		case DNEVNIK:
 			return new ParserDnevnik();
-		case BNTBG:
-			return new ParserBnt();
+		case DIRBG:
+			return new ParserDir();
 		case SEGA:
 			return new ParserSega();
 		case TRUD:

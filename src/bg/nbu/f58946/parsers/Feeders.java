@@ -1,7 +1,7 @@
 package bg.nbu.f58946.parsers;
 
 public enum Feeders {
-	DNEVNIK(1), OFFNEWS(2), BNTBG(3), TRUD(4), SEGA(5);
+	DNEVNIK(1), OFFNEWS(2), DIRBG(3), TRUD(4), SEGA(5);
 
 	private int number;
 
