@@ -15,11 +15,12 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import bg.nbu.f58946.database.MyDataSource;
 import bg.nbu.f58946.exceptions.BusinessException;
@@ -35,21 +36,23 @@ import bg.nbu.f58946.tests.Content;
 import com.sun.syndication.io.FeedException;
 
 public class Main {
-	public static Map<Feeders,Map<String,Content>> linkMap= new HashMap<Feeders,Map<String,Content>>(); 
-	static final Logger logger = Logger.getLogger(Main.class);
-	
+	public static Map<Feeders, Map<String, Content>> linkMap = new HashMap<Feeders, Map<String, Content>>();
+	final static Logger logger = LoggerFactory.getLogger(Main.class);
+
 	public static void main(String[] args) throws IOException,
 			BusinessException, IllegalArgumentException, FeedException {
 
-//		Runnable r = new Collection();
-//		(new Thread(r, "TCollectionTest")).start();
-		
-		logger.trace("Trace message");
-		logger.info("Start program");
-		logger.debug("Debug message");
-		getAllNewsDnevnik();
-		logger.error("Program exit");
-		logger.fatal("End of program");; 
+		// Runnable r = new Collection();
+		// (new Thread(r, "TCollectionTest")).start();
+
+//		System.out.println(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
+		 logger.trace("Trace message");
+		 logger.info("Start program");
+		 logger.debug("Debug message");
+//		 getAllNewsDnevnik();
+		 logger.warn("Something goes on .. ");
+		 logger.error("Program exit");
+		 
 	}
 
 	static void testMysql() {
@@ -173,6 +176,7 @@ public class Main {
 	}
 
 	static void getAllNewsDnevnik() throws MalformedURLException, IOException {
+		
 		Runnable r = new JobDnevnik((new MyHttpClient()).getHttpClient());
 		new Thread(r, "TDnevnik").start();
 	}
