@@ -14,7 +14,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import bg.nbu.f58946.bo.Content;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.main.Main;
 import bg.nbu.f58946.parsers.Feeders;
@@ -22,7 +25,6 @@ import bg.nbu.f58946.parsers.FetchTextFactory;
 import bg.nbu.f58946.parsers.IFetchText;
 import bg.nbu.f58946.parsers.IParser;
 import bg.nbu.f58946.parsers.ParserFactory;
-import bg.nbu.f58946.tests.Content;
 import bg.nbu.f58946.utils.Utils;
 
 public class JobDnevnik implements Runnable {
@@ -30,6 +32,7 @@ public class JobDnevnik implements Runnable {
 	String todayUrl = "http://www.dnevnik.bg/allnews/today/";
 	String baseUrl = "http://www.dnevnik.bg";
 	HttpClient httpClient;
+	final static Logger logger = LoggerFactory.getLogger(JobDnevnik.class);
 
 	public JobDnevnik(HttpClient httpClient) {
 		this.httpClient = httpClient;
@@ -76,7 +79,15 @@ public class JobDnevnik implements Runnable {
 					IFetchText fetcher = FetchTextFactory
 							.fetchText(Feeders.DNEVNIK);
 
-					String html = myParser.fetchContent(baseUrl + href);
+					String html ; 
+					
+					try {
+						html = myParser.fetchContent(baseUrl + href);
+					} catch (Exception e) {
+						logger.error("Cannot fetch : " + baseUrl + href);
+						continue;
+					}
+
 					Document doc = myParser.parseHTML(html);
 
 					String text;
@@ -99,8 +110,6 @@ public class JobDnevnik implements Runnable {
 
 					content.setContent(text).setMd5Href(md5Href)
 							.setHref(baseUrl + href).setMd5Content(md5Content)
-							.setWords(Utils.toWords(text))
-							.setTitleWords(Utils.toWords(title))
 							.setTitle(title);
 
 					Map<String, Content> tmp;
@@ -142,5 +151,4 @@ public class JobDnevnik implements Runnable {
 		}
 
 	}
-
 }

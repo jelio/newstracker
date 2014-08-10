@@ -1,4 +1,4 @@
-package bg.nbu.f58946.tests;
+package bg.nbu.f58946.bo;
 
 import java.util.ArrayList;
 
@@ -7,9 +7,8 @@ public class Content {
 	private String href;
 	private String content;
 	private String md5Content;
-	private ArrayList<String> words;
-	private ArrayList<String> titleWords;
 	private String title;
+	private int siteId ; 
 	
 	
 	/**
@@ -76,21 +75,6 @@ public class Content {
 		return this;
 	}
 
-	/**
-	 * @return the words
-	 */
-	public ArrayList<String> getWords() {
-		return words;
-	}
-
-	/**
-	 * @param words
-	 *            the words to set
-	 */
-	public Content setWords(ArrayList<String> words) {
-		this.words = words;
-		return this;
-	}
 
 	/**
 	 * @return the title
@@ -106,22 +90,23 @@ public class Content {
 		this.title = title;
 		return this;
 	}
-	
+
 	/**
-	 * @return the titleWords
+	 * @return the siteId
 	 */
-	public ArrayList<String> getTitleWords() {
-		return titleWords;
+	public int getSiteId() {
+		return siteId;
 	}
 
 	/**
-	 * @param titleWords the titleWords to set
+	 * @param siteId the siteId to set
 	 */
-	public Content setTitleWords(ArrayList<String> titleWords) {
-		this.titleWords = titleWords;
-		return this ;
+	public void setSiteId(int siteId) {
+		this.siteId = siteId;
 	}
+
 	
+
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder() ; 
@@ -129,18 +114,16 @@ public class Content {
 			.append(title)
 			.append("\nhref : ")
 			.append(href) 
+			.append("\nsite id : ")
+			.append(siteId)	
 			.append("\nmd5 href : ")
 			.append(md5Href)
 			.append("\nmd5Content : ")
 			.append(md5Content)
 			.append("\nContent : ")
-			.append(content)			
-			.append("\nwords " )
-			.append(words.toString())
-			.append("\ntitleWords " )
-			.append(titleWords.toString()); 
+			.append(content); 
 		return b.toString();
 	}
-
+	
 
 }

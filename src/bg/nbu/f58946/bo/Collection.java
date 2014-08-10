@@ -1,4 +1,4 @@
-package bg.nbu.f58946.tests;
+package bg.nbu.f58946.bo;
 
 import java.util.ArrayList;
 import java.util.HashMap;

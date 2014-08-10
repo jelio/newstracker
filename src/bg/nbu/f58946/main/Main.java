@@ -22,6 +22,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bg.nbu.f58946.bo.Content;
 import bg.nbu.f58946.database.MyDataSource;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.http.MyHttpClient;
@@ -31,7 +32,6 @@ import bg.nbu.f58946.parsers.FetchTextFactory;
 import bg.nbu.f58946.parsers.IFetchText;
 import bg.nbu.f58946.parsers.IParser;
 import bg.nbu.f58946.parsers.ParserFactory;
-import bg.nbu.f58946.tests.Content;
 
 import com.sun.syndication.io.FeedException;
 
@@ -44,14 +44,9 @@ public class Main {
 
 		// Runnable r = new Collection();
 		// (new Thread(r, "TCollectionTest")).start();
+		getAllNewsDnevnik();
 
 //		System.out.println(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
-		 logger.trace("Trace message");
-		 logger.info("Start program");
-		 logger.debug("Debug message");
-//		 getAllNewsDnevnik();
-		 logger.warn("Something goes on .. ");
-		 logger.error("Program exit");
 		 
 	}
 
