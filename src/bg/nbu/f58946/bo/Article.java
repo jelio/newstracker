@@ -1,15 +1,15 @@
 package bg.nbu.f58946.bo;
 
-import java.util.ArrayList;
 
-public class Content {
+public class Article {
 	private String md5Href;
 	private String href;
 	private String content;
 	private String md5Content;
 	private String title;
+	private String author ; 
 	private int siteId ; 
-	
+	private int id; 
 	
 	/**
 	 * @return the md5Href
@@ -22,7 +22,7 @@ public class Content {
 	 * @param md5Href
 	 *            the md5Href to set
 	 */
-	public Content setMd5Href(String md5Href) {
+	public Article setMd5Href(String md5Href) {
 		this.md5Href = md5Href;
 		return this;
 	}
@@ -38,7 +38,7 @@ public class Content {
 	 * @param href
 	 *            the href to set
 	 */
-	public Content setHref(String href) {
+	public Article setHref(String href) {
 		this.href = href;
 		return this;
 	}
@@ -54,7 +54,7 @@ public class Content {
 	 * @param content
 	 *            the content to set
 	 */
-	public Content setContent(String content) {
+	public Article setContent(String content) {
 		this.content = content;
 		return this;
 	}
@@ -70,7 +70,7 @@ public class Content {
 	 * @param md5Content
 	 *            the md5Content to set
 	 */
-	public Content setMd5Content(String md5Content) {
+	public Article setMd5Content(String md5Content) {
 		this.md5Content = md5Content;
 		return this;
 	}
@@ -86,7 +86,7 @@ public class Content {
 	/**
 	 * @param title the title to set
 	 */
-	public Content setTitle(String title) {
+	public Article setTitle(String title) {
 		this.title = title;
 		return this;
 	}
@@ -110,7 +110,9 @@ public class Content {
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder() ; 
-		b.append("\ntitle : ")
+		b.append("\nId : ")
+			.append(id)
+			.append("\ntitle : ")
 			.append(title)
 			.append("\nhref : ")
 			.append(href) 
@@ -121,8 +123,38 @@ public class Content {
 			.append("\nmd5Content : ")
 			.append(md5Content)
 			.append("\nContent : ")
-			.append(content); 
+			.append(content)
+			.append("\nAuthor : ")
+			.append(author); 
 		return b.toString();
+	}
+
+	/**
+	 * @return the author
+	 */
+	public String getAuthor() {
+		return author;
+	}
+
+	/**
+	 * @param author the author to set
+	 */
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 

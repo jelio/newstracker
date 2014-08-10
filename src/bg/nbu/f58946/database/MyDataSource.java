@@ -20,20 +20,26 @@ public class MyDataSource {
 
 	private static MyDataSource instance = null;
 	private DataSource myPool = null;
-
-	private MyDataSource(String connectURI) {
-		setupDataSource(connectURI);
+	private Connection connection = null;  
+	
+	private MyDataSource() {
+		setupDataSource("");
 	}
 
-	public static MyDataSource getInstance(String connectURI) {
+	public static MyDataSource getInstance() {
 		if (instance == null) {
-			instance = new MyDataSource(connectURI);
+			instance = new MyDataSource();
 		}
 		return instance;
 	}
 
 	public Connection getConnection() throws BusinessException {
 
+		if(connection != null) {
+			return connection ; 
+		}
+		
+		
 		String dbUrl = "jdbc:mysql://localhost/nbu";
 		String dbClass = "com.mysql.jdbc.Driver";
 		String username = "root";

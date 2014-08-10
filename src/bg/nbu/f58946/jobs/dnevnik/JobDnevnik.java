@@ -17,7 +17,8 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bg.nbu.f58946.bo.Content;
+import bg.nbu.f58946.bo.Article;
+import bg.nbu.f58946.database.dao.ArticleDao;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.main.Main;
 import bg.nbu.f58946.parsers.Feeders;
@@ -79,8 +80,8 @@ public class JobDnevnik implements Runnable {
 					IFetchText fetcher = FetchTextFactory
 							.fetchText(Feeders.DNEVNIK);
 
-					String html ; 
-					
+					String html;
+
 					try {
 						html = myParser.fetchContent(baseUrl + href);
 					} catch (Exception e) {
@@ -106,35 +107,42 @@ public class JobDnevnik implements Runnable {
 					String md5Href = Utils.getMD5(baseUrl + href);
 					String md5Content = Utils.getMD5(text);
 
-					Content content = new Content();
+					Article content = new Article();
 
 					content.setContent(text).setMd5Href(md5Href)
 							.setHref(baseUrl + href).setMd5Content(md5Content)
 							.setTitle(title);
 
-					Map<String, Content> tmp;
+					Map<String, Article> tmp;
 
 					if (Main.linkMap.containsKey(Feeders.DNEVNIK)) {
 						tmp = Main.linkMap.get(Feeders.DNEVNIK);
 					} else {
-						tmp = new HashMap<String, Content>();
+						tmp = new HashMap<String, Article>();
 					}
 
 					tmp.put(md5Href, content);
 
 					Main.linkMap.put(Feeders.DNEVNIK, tmp);
 
-					// System.out.println(content);
-
-					if (cnt++ > 10)
-						break;
 				}
 
 			} finally {
 				httpResponse.close();
 			}
 
-			System.out.println(Main.linkMap);
+			Map<String, Article> myArticles = Main.linkMap.get(Feeders.DNEVNIK);
+
+			for (Article art : myArticles.values()) {
+				ArticleDao aDo = new ArticleDao(art);
+				try {
+					logger.trace("Recording article : {}", art);
+					aDo.insert();
+				} catch (BusinessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 
 			/*
 			 * while (true) {
@@ -147,7 +155,6 @@ public class JobDnevnik implements Runnable {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-			;
 		}
 
 	}

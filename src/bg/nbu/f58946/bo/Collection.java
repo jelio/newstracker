@@ -3,7 +3,6 @@ package bg.nbu.f58946.bo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import bg.nbu.f58946.utils.Utils;
 

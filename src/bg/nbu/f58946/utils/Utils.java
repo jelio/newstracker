@@ -27,7 +27,7 @@ public class Utils {
 		ArrayList<String> wordsArray = new ArrayList<>() ; 
 		
 		while(s.hasNext()){
-			wordsArray.add(s.next());
+			wordsArray.add(s.next().toLowerCase());
 		}
 		
 		s.close();

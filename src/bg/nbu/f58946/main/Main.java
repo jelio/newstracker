@@ -3,12 +3,8 @@ package bg.nbu.f58946.main;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -22,10 +18,10 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bg.nbu.f58946.bo.Content;
-import bg.nbu.f58946.database.MyDataSource;
+import bg.nbu.f58946.bo.Article;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.http.MyHttpClient;
+import bg.nbu.f58946.jobs.dnevnik.HandleArticle;
 import bg.nbu.f58946.jobs.dnevnik.JobDnevnik;
 import bg.nbu.f58946.parsers.Feeders;
 import bg.nbu.f58946.parsers.FetchTextFactory;
@@ -36,42 +32,14 @@ import bg.nbu.f58946.parsers.ParserFactory;
 import com.sun.syndication.io.FeedException;
 
 public class Main {
-	public static Map<Feeders, Map<String, Content>> linkMap = new HashMap<Feeders, Map<String, Content>>();
+	public static Map<Feeders, Map<String, Article>> linkMap = new ConcurrentHashMap<Feeders, Map<String, Article>>();
 	final static Logger logger = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) throws IOException,
 			BusinessException, IllegalArgumentException, FeedException {
 
-		// Runnable r = new Collection();
-		// (new Thread(r, "TCollectionTest")).start();
-		getAllNewsDnevnik();
+		handleDnevnik() ; 	
 
-//		System.out.println(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
-		 
-	}
-
-	static void testMysql() {
-		String query = "SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'nbu'";
-
-		try {
-
-			Connection connection = MyDataSource.getInstance("")
-					.getConnection();
-
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
-			while (resultSet.next()) {
-				String tableName = resultSet.getString(1);
-				System.out.println("Table name : " + tableName);
-			}
-			connection.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (BusinessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	static void getAllDir() throws MalformedURLException, IOException,
@@ -171,9 +139,13 @@ public class Main {
 	}
 
 	static void getAllNewsDnevnik() throws MalformedURLException, IOException {
-		
+
 		Runnable r = new JobDnevnik((new MyHttpClient()).getHttpClient());
 		new Thread(r, "TDnevnik").start();
+	}
+
+	static void handleDnevnik() {
+		new Thread(new HandleArticle(), "THD").start();
 	}
 
 	static void testSega() throws IOException, BusinessException {
