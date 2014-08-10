@@ -31,6 +31,11 @@ public class WordDao {
 		}
 	}
 
+	public boolean save() {
+		return true ; 
+	}
+	
+	
 	public static Map<String, Word> loadWords() {
 
 		Map<String, Word> allWords = Collections

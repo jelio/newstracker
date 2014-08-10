@@ -97,5 +97,25 @@ public class Word {
 	public void setLangId(int langId) {
 		this.langId = langId;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder() ; 
+		b.append("\nId : ")
+			.append(id)
+			.append("\nWord : ")
+			.append(word)
+			.append("\nparentId : ")
+			.append(parentId) 
+			.append("\nisName : ")
+			.append(isName)	
+			.append("\nisSmallWord : ")
+			.append(isSmallWord)
+			.append("\nlandId : ")
+			.append(langId); 
+		
+		return b.toString();
+	}
+
 
 }
