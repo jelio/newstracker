@@ -22,7 +22,7 @@ public class ArticleDao {
 		this.article = article;
 	}
 
-	public void insert() throws BusinessException {
+	public void save() throws BusinessException {
 		try {
 
 			Connection con = MyDataSource.getInstance().getConnection();

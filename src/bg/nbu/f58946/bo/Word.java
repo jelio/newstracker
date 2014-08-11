@@ -18,9 +18,11 @@ public class Word {
 	/**
 	 * @param word
 	 *            the word to set
+	 * @return
 	 */
-	public void setWord(String word) {
+	public Word setWord(String word) {
 		this.word = word;
+		return this;
 	}
 
 	/**
@@ -34,8 +36,9 @@ public class Word {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(int id) {
+	public Word setId(int id) {
 		this.id = id;
+		return this;
 	}
 
 	/**
@@ -49,8 +52,9 @@ public class Word {
 	 * @param parentId
 	 *            the parentId to set
 	 */
-	public void setParentId(int parentId) {
+	public Word setParentId(int parentId) {
 		this.parentId = parentId;
+		return this;
 	}
 
 	/**
@@ -64,8 +68,9 @@ public class Word {
 	 * @param isName
 	 *            the isName to set
 	 */
-	public void setIsName(int isName) {
+	public Word setIsName(int isName) {
 		this.isName = isName;
+		return this;
 	}
 
 	/**
@@ -79,8 +84,9 @@ public class Word {
 	 * @param isSmallWord
 	 *            the isSmallWord to set
 	 */
-	public void setIsSmallWord(int isSmallWord) {
+	public Word setIsSmallWord(int isSmallWord) {
 		this.isSmallWord = isSmallWord;
+		return this;
 	}
 
 	/**
@@ -94,28 +100,19 @@ public class Word {
 	 * @param langId
 	 *            the langId to set
 	 */
-	public void setLangId(int langId) {
+	public Word setLangId(int langId) {
 		this.langId = langId;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder b = new StringBuilder() ; 
-		b.append("\nId : ")
-			.append(id)
-			.append("\nWord : ")
-			.append(word)
-			.append("\nparentId : ")
-			.append(parentId) 
-			.append("\nisName : ")
-			.append(isName)	
-			.append("\nisSmallWord : ")
-			.append(isSmallWord)
-			.append("\nlandId : ")
-			.append(langId); 
-		
-		return b.toString();
+		return this;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		b.append("\nId : ").append(id).append("\nWord : ").append(word)
+				.append(isName).append("\nisSmallWord : ").append(isSmallWord)
+				.append("\nlandId : ").append(langId);
+
+		return b.toString();
+	}
 
 }

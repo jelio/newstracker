@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bg.nbu.f58946.bo.Article;
+import bg.nbu.f58946.bo.Word;
 import bg.nbu.f58946.database.dao.ArticleDao;
+import bg.nbu.f58946.database.dao.WordDao;
 import bg.nbu.f58946.utils.Utils;
 
 public class HandleArticle implements Runnable {
@@ -31,12 +33,14 @@ public class HandleArticle implements Runnable {
 		}
 
 	}
-	
-	private void handle(Article a){
+
+	private void handle(Article a) {
 		logger.debug("article : {}", a);
-		
-		ArrayList<String> titleArray = Utils.toWords(a.getTitle()) ;
-		
-		ArticleDao.setProcessed(a.getId());		
+
+		ArrayList<String> titleArray = Utils.toWords(a.getTitle());
+
+		WordDao.saveWords(titleArray);
+
+//		ArticleDao.setProcessed(a.getId());
 	}
 }

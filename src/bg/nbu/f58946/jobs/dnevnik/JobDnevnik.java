@@ -137,7 +137,7 @@ public class JobDnevnik implements Runnable {
 				ArticleDao aDo = new ArticleDao(art);
 				try {
 					logger.trace("Recording article : {}", art);
-					aDo.insert();
+					aDo.save();
 				} catch (BusinessException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

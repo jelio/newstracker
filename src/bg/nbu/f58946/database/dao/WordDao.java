@@ -1,6 +1,7 @@
 package bg.nbu.f58946.database.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,7 +13,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bg.nbu.f58946.bo.Article;
 import bg.nbu.f58946.bo.Word;
 import bg.nbu.f58946.database.MyDataSource;
 import bg.nbu.f58946.exceptions.BusinessException;
@@ -25,17 +25,60 @@ public class WordDao {
 		this.word = word;
 	}
 
+	/**
+	 * Save in DB all words TODO Update General Map with all words/ids
+	 * 
+	 * @param words
+	 */
 	public static void saveWords(ArrayList<String> words) {
-		for (String word : words) {
-
+		for (String w : words) {
+			WordDao iWordDao = new WordDao((new Word()).setWord(w));
+			try {
+				iWordDao.saveSimple();
+			} catch (BusinessException e) {
+				logger.error("Cannot save word : {}, error : {}", w,
+						e.toString());
+			}
+			break;
 		}
 	}
 
-	public boolean save() {
-		return true ; 
+	public boolean saveSimple() throws BusinessException {
+		try {
+
+			Connection con = MyDataSource.getInstance().getConnection();
+
+			String sql = "insert into words (word) values (?)";
+
+			PreparedStatement preparedStament = con.prepareStatement(sql,
+					Statement.RETURN_GENERATED_KEYS);
+
+			preparedStament.setString(1, word.getWord());
+
+			preparedStament.executeUpdate(); // return number of affected rows
+
+			int id = -1;
+			ResultSet rs = preparedStament.getGeneratedKeys();
+			if (rs.next()) {
+				id = rs.getInt(1);
+			}
+
+			if (id < 1) {
+				logger.error("Cannot fetch id");
+				return false;
+			}
+
+			logger.debug("Insert word : {} with id : {}", word.getWord(), id);
+		}
+
+		catch (SQLException e) {
+			logger.error(e.toString());
+			return false;
+		}
+
+		return true;
 	}
-	
-	
+
 	public static Map<String, Word> loadWords() {
 
 		Map<String, Word> allWords = Collections
