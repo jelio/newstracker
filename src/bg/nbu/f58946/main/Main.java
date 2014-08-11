@@ -3,6 +3,9 @@ package bg.nbu.f58946.main;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,9 +22,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bg.nbu.f58946.bo.Article;
+import bg.nbu.f58946.bo.Site;
+import bg.nbu.f58946.bo.Word;
+import bg.nbu.f58946.database.dao.SiteDao;
+import bg.nbu.f58946.database.dao.WordDao;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.http.MyHttpClient;
-import bg.nbu.f58946.jobs.dnevnik.HandleArticle;
+import bg.nbu.f58946.jobs.HandleArticle;
+import bg.nbu.f58946.jobs.WordsGenerator;
 import bg.nbu.f58946.jobs.dnevnik.JobDnevnik;
 import bg.nbu.f58946.parsers.Feeders;
 import bg.nbu.f58946.parsers.FetchTextFactory;
@@ -32,14 +40,39 @@ import bg.nbu.f58946.parsers.ParserFactory;
 import com.sun.syndication.io.FeedException;
 
 public class Main {
+
+	/**
+	 * Map with all articles TODO may be not needed
+	 */
 	public static Map<Feeders, Map<String, Article>> linkMap = new ConcurrentHashMap<Feeders, Map<String, Article>>();
+
+	/**
+	 * TODO all words Map
+	 */
+	public static Map<String, Word> wordsDictionary = Collections
+			.synchronizedMap(new HashMap<String, Word>());
+
 	final static Logger logger = LoggerFactory.getLogger(Main.class);
+
+	public final static ArrayList<Site> allowedSites = SiteDao.loadSites();
 
 	public static void main(String[] args) throws IOException,
 			BusinessException, IllegalArgumentException, FeedException {
 
-		handleDnevnik() ; 	
+		initializeMap();
 
+		startWordsProcessing();
+		logger.debug(allowedSites.toString());
+		// logger.debug(wordsDictionary.toString());
+
+	}
+
+	private static void startWordsProcessing() {
+		new Thread(new WordsGenerator(), "TWG").start();
+	}
+
+	private static void initializeMap() {
+		WordDao.loadAllWords();
 	}
 
 	static void getAllDir() throws MalformedURLException, IOException,
@@ -142,10 +175,6 @@ public class Main {
 
 		Runnable r = new JobDnevnik((new MyHttpClient()).getHttpClient());
 		new Thread(r, "TDnevnik").start();
-	}
-
-	static void handleDnevnik() {
-		new Thread(new HandleArticle(), "THD").start();
 	}
 
 	static void testSega() throws IOException, BusinessException {

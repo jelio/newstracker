@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import bg.nbu.f58946.bo.Word;
 import bg.nbu.f58946.database.MyDataSource;
 import bg.nbu.f58946.exceptions.BusinessException;
+import bg.nbu.f58946.main.Main;
 
 public class WordDao {
 	final static Logger logger = LoggerFactory.getLogger(WordDao.class);
@@ -79,12 +80,9 @@ public class WordDao {
 		return true;
 	}
 
-	public static Map<String, Word> loadWords() {
+	public static void loadAllWords() {
 
-		Map<String, Word> allWords = Collections
-				.synchronizedMap(new HashMap<String, Word>());
-
-		String query = "SELECT * FROM words";
+		String query = "SELECT * FROM words WHERE lang_id = 1";
 
 		try {
 
@@ -104,7 +102,8 @@ public class WordDao {
 
 				logger.trace("fetch article : {} ", iWord);
 
-				allWords.put(iWord.getWord(), iWord);
+				// Load words in Main::wordsDictionary map 
+				Main.wordsDictionary.put(iWord.getWord(), iWord);
 			}
 
 			connection.close();
@@ -112,6 +111,5 @@ public class WordDao {
 		} catch (SQLException | BusinessException e) {
 			logger.error(e.toString());
 		}
-		return allWords;
 	}
 }

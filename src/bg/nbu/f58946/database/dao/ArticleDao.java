@@ -102,12 +102,9 @@ public class ArticleDao {
 
 			connection.close();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (BusinessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (SQLException | BusinessException e) {
+			logger.error(e.toString());
+		} 
 		return unprocessed;
 	}
 

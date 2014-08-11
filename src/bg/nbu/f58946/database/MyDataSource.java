@@ -20,8 +20,8 @@ public class MyDataSource {
 
 	private static MyDataSource instance = null;
 	private DataSource myPool = null;
-	private Connection connection = null;  
-	
+	private Connection connection = null;
+
 	private MyDataSource() {
 		setupDataSource("");
 	}
@@ -35,11 +35,10 @@ public class MyDataSource {
 
 	public Connection getConnection() throws BusinessException {
 
-		if(connection != null) {
-			return connection ; 
+		if (connection != null) {
+			return connection;
 		}
-		
-		
+
 		String dbUrl = "jdbc:mysql://localhost/nbu";
 		String dbClass = "com.mysql.jdbc.Driver";
 		String username = "root";
@@ -51,9 +50,7 @@ public class MyDataSource {
 					username, password);
 
 			return connection;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 
