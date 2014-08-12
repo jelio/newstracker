@@ -1,12 +1,12 @@
 package bg.nbu.f58946.parsers.trud;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import bg.nbu.f58946.bo.Site;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.parsers.AFetchText;
-import bg.nbu.f58946.parsers.IFetchText;
 
 public class FetchTextTrud extends AFetchText {
 	public FetchTextTrud(Site site) {
@@ -32,6 +32,12 @@ public class FetchTextTrud extends AFetchText {
 
 	@Override
 	public Elements getElements(Document document) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getHref(Element e) {
 		// TODO Auto-generated method stub
 		return null;
 	}

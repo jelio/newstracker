@@ -46,7 +46,7 @@ public abstract class AFetchText implements IFetchText {
 
 			for (Element element : elements) {
 
-				String href = element.attr("href");
+				String href = getHref(element);
 
 				String html;
 
@@ -96,7 +96,7 @@ public abstract class AFetchText implements IFetchText {
 		return null;
 	}
 
-	public Document fetchDocument() throws IOException {
+	private Document fetchDocument() throws IOException {
 
 		HttpEntity entity = getHttpEntity();
 
@@ -108,6 +108,11 @@ public abstract class AFetchText implements IFetchText {
 
 	}
 
+	/**
+	 * Fetch html content and convert it to HttpEntity
+	 * @return HttpEntity
+	 * @throws IOException
+	 */
 	private HttpEntity getHttpEntity() throws IOException {
 		CloseableHttpResponse httpResponse = null;
 		try {

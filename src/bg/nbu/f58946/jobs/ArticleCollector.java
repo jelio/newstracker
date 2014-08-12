@@ -10,7 +10,6 @@ import bg.nbu.f58946.bo.Site;
 import bg.nbu.f58946.database.dao.ArticleDao;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.main.Main;
-import bg.nbu.f58946.parsers.Feeders;
 import bg.nbu.f58946.parsers.FetchTextFactory;
 import bg.nbu.f58946.parsers.IFetchText;
 

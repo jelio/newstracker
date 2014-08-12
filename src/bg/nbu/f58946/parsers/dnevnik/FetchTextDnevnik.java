@@ -1,6 +1,7 @@
 package bg.nbu.f58946.parsers.dnevnik;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,11 @@ public class FetchTextDnevnik extends AFetchText {
 	@Override
 	public Elements getElements(Document document) {
 		return document.select(".info > a");
+	}
+
+	@Override
+	public String getHref(Element e) {
+		return e.attr("href") ; 
 	}
 	
 }

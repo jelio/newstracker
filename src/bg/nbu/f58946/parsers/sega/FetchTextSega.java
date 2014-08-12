@@ -7,7 +7,6 @@ import org.jsoup.select.Elements;
 import bg.nbu.f58946.bo.Site;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.parsers.AFetchText;
-import bg.nbu.f58946.parsers.IFetchText;
 
 public class FetchTextSega extends AFetchText {
 	public FetchTextSega(Site site) {
@@ -41,6 +40,12 @@ public class FetchTextSega extends AFetchText {
 
 	@Override
 	public Elements getElements(Document document) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getHref(Element e) {
 		// TODO Auto-generated method stub
 		return null;
 	}
