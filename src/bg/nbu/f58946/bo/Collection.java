@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import bg.nbu.f58946.utils.Utils;
+import bg.nbu.f58946.utils.MyUtils;
 
 public class Collection implements Runnable {
 	Map<String,String> mapA = new HashMap<String,String>();
@@ -14,11 +14,11 @@ public class Collection implements Runnable {
 		
 		String[] myLinks = {"test asdsadsad ","test 1sa dsad"} ; 
 		
-		ArrayList<String> wordsArray = Utils.toWords("jelio e super! ASD@#$@# ") ;
+		ArrayList<String> wordsArray = MyUtils.toWords("jelio e super! ASD@#$@# ") ;
 		
 		
 		for (String string : myLinks) {
-			mapA.put(Utils.getMD5(string), string) ; 
+			mapA.put(MyUtils.getMD5(string), string) ; 
 		}
 		
 		System.out.println(wordsArray);

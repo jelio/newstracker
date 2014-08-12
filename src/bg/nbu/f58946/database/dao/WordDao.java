@@ -6,10 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.apache.commons.dbcp2.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,14 +43,15 @@ public class WordDao {
 	}
 
 	public boolean saveSimple() throws BusinessException {
+		Connection connection = null;
 		try {
 
-			Connection con = MyDataSource.getInstance().getConnection();
+			connection = MyDataSource.getInstance().getConnection();
 
 			String sql = "insert into words (word) values (?)";
 
-			PreparedStatement preparedStament = con.prepareStatement(sql,
-					Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement preparedStament = connection.prepareStatement(
+					sql, Statement.RETURN_GENERATED_KEYS);
 
 			preparedStament.setString(1, word.getWord());
 
@@ -75,6 +74,8 @@ public class WordDao {
 		catch (SQLException e) {
 			logger.error(e.toString());
 			return false;
+		} finally {
+			Utils.closeQuietly(connection);
 		}
 
 		return true;
@@ -83,10 +84,11 @@ public class WordDao {
 	public static void loadAllWords() {
 
 		String query = "SELECT * FROM words WHERE lang_id = 1";
+		Connection connection = null;
 
 		try {
 
-			Connection connection = MyDataSource.getInstance().getConnection();
+			connection = MyDataSource.getInstance().getConnection();
 
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
@@ -102,14 +104,14 @@ public class WordDao {
 
 				logger.trace("fetch article : {} ", iWord);
 
-				// Load words in Main::wordsDictionary map 
+				// Load words in Main::wordsDictionary map
 				Main.wordsDictionary.put(iWord.getWord(), iWord);
 			}
 
-			connection.close();
-
 		} catch (SQLException | BusinessException e) {
 			logger.error(e.toString());
+		} finally {
+			Utils.closeQuietly(connection);
 		}
 	}
 }
