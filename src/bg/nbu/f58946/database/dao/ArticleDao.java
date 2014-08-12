@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.commons.dbcp2.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,13 +24,15 @@ public class ArticleDao {
 	}
 
 	public void save() throws BusinessException {
+		Connection connection = null;
 		try {
 
-			Connection con = MyDataSource.getInstance().getConnection();
+			connection = MyDataSource.getInstance().getConnection();
 
 			String sql = "insert into articles (site_id,title,content,href,md5_content,md5_href,author) values (?,?,?,?,?,?,?)";
 
-			PreparedStatement preparedStament = con.prepareStatement(sql);
+			PreparedStatement preparedStament = connection
+					.prepareStatement(sql);
 
 			preparedStament.setInt(1, article.getSiteId());
 			preparedStament.setString(2, article.getTitle());
@@ -39,24 +42,28 @@ public class ArticleDao {
 			preparedStament.setString(6, article.getMd5Href());
 			preparedStament.setString(7, article.getAuthor());
 
-			preparedStament.execute();
+			preparedStament.executeUpdate();
 			logger.debug("Insert article with href {}", article.getHref());
 		}
 
 		catch (SQLException e) {
 			logger.error(e.toString());
+		} finally {
+			Utils.closeQuietly(connection);
 		}
 
 	}
 
 	public static boolean setProcessed(int id) {
+		Connection connection = null;
 		try {
 
-			Connection con = MyDataSource.getInstance().getConnection();
+			connection = MyDataSource.getInstance().getConnection();
 
 			String sql = "update articles set is_processed = 1 where is_processed = 0 and id = ?";
 
-			PreparedStatement preparedStament = con.prepareStatement(sql);
+			PreparedStatement preparedStament = connection
+					.prepareStatement(sql);
 
 			preparedStament.setInt(1, id);
 
@@ -67,6 +74,8 @@ public class ArticleDao {
 		catch (SQLException | BusinessException e) {
 			logger.error(e.toString());
 			return false;
+		} finally {
+			Utils.closeQuietly(connection);
 		}
 
 		return true;
@@ -78,9 +87,10 @@ public class ArticleDao {
 
 		String query = "SELECT * FROM articles WHERE is_processed = 0 LIMIT 0,200";
 
+		Connection connection = null;
 		try {
 
-			Connection connection = MyDataSource.getInstance().getConnection();
+			connection = MyDataSource.getInstance().getConnection();
 
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
@@ -100,11 +110,11 @@ public class ArticleDao {
 				unprocessed.add(iArticle);
 			}
 
-			connection.close();
-
 		} catch (SQLException | BusinessException e) {
 			logger.error(e.toString());
-		} 
+		} finally {
+			Utils.closeQuietly(connection);
+		}
 		return unprocessed;
 	}
 

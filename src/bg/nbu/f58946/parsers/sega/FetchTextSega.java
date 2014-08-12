@@ -4,10 +4,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import bg.nbu.f58946.bo.Site;
 import bg.nbu.f58946.exceptions.BusinessException;
+import bg.nbu.f58946.parsers.AFetchText;
 import bg.nbu.f58946.parsers.IFetchText;
 
-public class FetchTextSega implements IFetchText {
+public class FetchTextSega extends AFetchText {
+	public FetchTextSega(Site site) {
+		super(site);
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final String className = "a_content";
 
 	@Override
@@ -30,6 +37,12 @@ public class FetchTextSega implements IFetchText {
 	@Override
 	public String getTitle(Document doc) throws BusinessException {
 		return "";		
+	}
+
+	@Override
+	public Elements getElements(Document document) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

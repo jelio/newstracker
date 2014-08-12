@@ -1,5 +1,6 @@
 package bg.nbu.f58946.parsers;
 
+import bg.nbu.f58946.bo.Site;
 import bg.nbu.f58946.parsers.dir.FetchTextDir;
 import bg.nbu.f58946.parsers.dnevnik.FetchTextDnevnik;
 import bg.nbu.f58946.parsers.offnews.FetchTextOffnews;
@@ -8,18 +9,18 @@ import bg.nbu.f58946.parsers.trud.FetchTextTrud;
 
 public class FetchTextFactory {
 
-	public static IFetchText fetchText(Feeders feed) {
-		switch (feed) {
-		case DNEVNIK:
-			return new FetchTextDnevnik();
-		case DIRBG:
-			return new FetchTextDir();
-		case SEGA:
-			return new FetchTextSega();
-		case TRUD:
-			return new FetchTextTrud();
-		case OFFNEWS:
-			return new FetchTextOffnews();
+	public static IFetchText getFetcher(Site s) {
+		switch (s.getName()) {
+		case "dnevnik":
+			return new FetchTextDnevnik(s);
+		case "dir":
+			return new FetchTextDir(s);
+		case "sega":
+			return new FetchTextSega(s);
+		case "trud":
+			return new FetchTextTrud(s);
+		case "offnews":
+			return new FetchTextOffnews(s);
 		default:
 			break;
 
