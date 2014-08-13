@@ -33,10 +33,11 @@ public class ArticleCollector implements Runnable {
 				Map<String, Article> myArticles = null;
 				try {
 					myArticles = fetcher.getArticles();
+					logger.debug(myArticles.toString());
 				} catch (BusinessException e) {
 					logger.error(e.toString());
 				}
-
+				
 				saveArticles(myArticles);
 
 				break;

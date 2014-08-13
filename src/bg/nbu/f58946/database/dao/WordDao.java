@@ -11,6 +11,8 @@ import org.apache.commons.dbcp2.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
+
 import bg.nbu.f58946.bo.Word;
 import bg.nbu.f58946.database.MyDataSource;
 import bg.nbu.f58946.exceptions.BusinessException;
@@ -70,7 +72,10 @@ public class WordDao {
 
 			logger.debug("Insert word : {} with id : {}", word.getWord(), id);
 		}
-
+		catch (MySQLIntegrityConstraintViolationException e) {
+			logger.warn(e.toString());
+			return false;
+		}
 		catch (SQLException e) {
 			logger.error(e.toString());
 			return false;
@@ -102,7 +107,7 @@ public class WordDao {
 				iWord.setIsSmallWord(resultSet.getInt(5));
 				iWord.setLangId(resultSet.getInt(6));
 
-				logger.trace("fetch article : {} ", iWord);
+				logger.trace("fetch word : {} ", iWord);
 
 				// Load words in Main::wordsDictionary map
 				Main.wordsDictionary.put(iWord.getWord(), iWord);

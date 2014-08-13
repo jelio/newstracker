@@ -112,19 +112,19 @@ public class Article {
 		StringBuilder b = new StringBuilder() ; 
 		b.append("\nId : ")
 			.append(id)
-			.append("\ntitle : ")
+			.append("\ttitle : ")
 			.append(title)
-			.append("\nhref : ")
+			.append("\thref : ")
 			.append(href) 
-			.append("\nsite id : ")
+			.append("\tsite id : ")
 			.append(siteId)	
-			.append("\nmd5 href : ")
+			.append("\tmd5 href : ")
 			.append(md5Href)
-			.append("\nmd5Content : ")
+			.append("\tmd5Content : ")
 			.append(md5Content)
-			.append("\nContent : ")
+			.append("\tContent : ")
 			.append(content)
-			.append("\nAuthor : ")
+			.append("\tAuthor : ")
 			.append(author); 
 		return b.toString();
 	}

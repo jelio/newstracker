@@ -108,9 +108,9 @@ public class Word {
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder();
-		b.append("\nId : ").append(id).append("\nWord : ").append(word)
-				.append(isName).append("\nisSmallWord : ").append(isSmallWord)
-				.append("\nlandId : ").append(langId);
+		b.append("\nId : ").append(id).append("\tWord : ").append(word)
+				.append(isName).append("\tisSmallWord : ").append(isSmallWord)
+				.append("\tlandId : ").append(langId);
 
 		return b.toString();
 	}

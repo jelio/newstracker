@@ -37,83 +37,68 @@ public abstract class AFetchText implements IFetchText {
 	public Map<String, Article> getArticles() throws BusinessException {
 
 		Map<String, Article> articles = new HashMap<String, Article>();
+		Document document = null;
 
 		try {
-
-			Document document = fetchDocument();
-
-			Elements elements = getElements(document);
-
-			for (Element element : elements) {
-
-				String href = getHref(element);
-
-				String html;
-
-				// TODO parse url and filter it ..
-				try {
-					html = MyUtils.fetchContent(getSite().getHref() + href);
-				} catch (Exception e) {
-					logger.error("Cannot fetch : " + getSite().getHref() + href);
-					continue;
-				}
-
-				Document doc = MyUtils.parseHTML(html);
-
-				String text;
-				String title;
-
-				try {
-
-					text = getArticleText(doc);
-					title = getTitle(doc);
-
-				} catch (BusinessException e) {
-					System.err
-							.println("Error at " + getSite().getHref() + href);
-					continue;
-				}
-
-				String md5Href = MyUtils.getMD5(getSite().getHref() + href);
-				String md5Content = MyUtils.getMD5(text);
-
-				Article content = new Article();
-
-				content.setContent(text).setMd5Href(md5Href)
-						.setHref(getSite().getHref() + href)
-						.setMd5Content(md5Content).setTitle(title);
-
-				articles.put(md5Href, content);
-
-				return articles;
-			}
-
+			document = fetchDocument();
 		} catch (IOException e) {
+			logger.error("Cannot fetch for {}", getSite().getAllNewsHref());
 			logger.error(e.toString());
 			throw new BusinessException();
 		}
 
-		return null;
+		// call overridden method getElements for each site 
+		Elements elements = getElements(document);
+
+		for (Element element : elements) {
+			
+			// call overridden method getHref for each site
+			String href = getHref(element);
+
+			String html;
+
+			// TODO parse url and filter it .. call fetcher method filterURI
+			try {
+				html = MyUtils.fetchContent(getSite().getHref() + href);
+			} catch (Exception e) {
+				logger.error("Cannot fetch : " + getSite().getHref() + href);
+				continue;
+			}
+
+			Document doc = MyUtils.parseHTML(html);
+
+			String text;
+			String title;
+
+			try {
+				// call overridden method getArticleText for each site
+				text = getArticleText(doc);
+				// call overridden method getTitle for each site
+				title = getTitle(doc);
+
+			} catch (BusinessException e) {
+				logger.warn("Error at {}", getSite().getHref() + href);
+				continue;
+			}
+			
+			Article content = new Article();
+
+			// @formatter:off
+			content.setContent(text)
+					.setMd5Href(MyUtils.getMD5(getSite().getHref() + href))
+					.setHref(getSite().getHref() + href)
+					.setMd5Content(MyUtils.getMD5(text))
+					.setTitle(title);
+			// @formatter:on
+
+			articles.put(MyUtils.getMD5(getSite().getHref() + href), content);
+		}
+
+		return articles;
 	}
 
 	private Document fetchDocument() throws IOException {
 
-		HttpEntity entity = getHttpEntity();
-
-		String htmlContent = IOUtils.toString(entity.getContent(), "utf-8");
-
-		Document document = Jsoup.parse(htmlContent);
-
-		return document;
-
-	}
-
-	/**
-	 * Fetch html content and convert it to HttpEntity
-	 * @return HttpEntity
-	 * @throws IOException
-	 */
-	private HttpEntity getHttpEntity() throws IOException {
 		CloseableHttpResponse httpResponse = null;
 		try {
 			httpResponse = (CloseableHttpResponse) httpClient
@@ -127,7 +112,12 @@ public abstract class AFetchText implements IFetchText {
 
 			HttpEntity entity = httpResponse.getEntity();
 
-			return entity;
+			String htmlContent = IOUtils.toString(entity.getContent(), "utf-8");
+
+			Document document = Jsoup.parse(htmlContent);
+
+			return document;
+
 		} catch (IOException e) {
 			logger.error(e.toString());
 			throw e;

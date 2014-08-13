@@ -59,11 +59,11 @@ public class Site {
 		StringBuilder b = new StringBuilder() ; 
 		b.append("\nId : ")
 			.append(id)
-			.append("\nname : ")
+			.append("\tname : ")
 			.append(name)
-			.append("\nhref : ")
+			.append("\thref : ")
 			.append(href) 
-			.append("\nAllNewsHref : ")
+			.append("\tAllNewsHref : ")
 			.append(allNewsHref); 
 		return b.toString();
 	}
