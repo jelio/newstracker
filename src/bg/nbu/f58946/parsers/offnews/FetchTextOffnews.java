@@ -4,10 +4,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import bg.nbu.f58946.bo.Site;
 import bg.nbu.f58946.exceptions.BusinessException;
-import bg.nbu.f58946.parsers.IFetchText;
+import bg.nbu.f58946.parsers.AFetchText;
 
-public class FetchTextOffnews implements IFetchText {
+public class FetchTextOffnews extends AFetchText {
+	
+	public FetchTextOffnews(Site site) {
+		super(site);
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final String className = "news_text";
 
 	@Override
@@ -31,5 +38,17 @@ public class FetchTextOffnews implements IFetchText {
 	@Override
 	public String getTitle(Document doc) throws BusinessException {
 		return "";
+	}
+
+	@Override
+	public Elements getElements(Document document) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getHref(Element e) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
