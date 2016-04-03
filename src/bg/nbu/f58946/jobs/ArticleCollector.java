@@ -2,20 +2,20 @@ package bg.nbu.f58946.jobs;
 
 import java.util.Map;
 
+import org.elasticsearch.action.index.IndexResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bg.nbu.f58946.bo.ALL_SITES;
 import bg.nbu.f58946.bo.Article;
-import bg.nbu.f58946.bo.Site;
-import bg.nbu.f58946.database.dao.ArticleDao;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.main.Main;
 import bg.nbu.f58946.parsers.FetchTextFactory;
 import bg.nbu.f58946.parsers.IFetchText;
+import bg.nbu.f58946.utils.MyUtils;
 
 public class ArticleCollector implements Runnable {
-	final static Logger logger = LoggerFactory
-			.getLogger(ArticleCollector.class);
+	final static Logger logger = LoggerFactory.getLogger(ArticleCollector.class);
 
 	private boolean isRunning = true;
 
@@ -23,22 +23,23 @@ public class ArticleCollector implements Runnable {
 	public void run() {
 		while (isRunning) {
 
-			for (Site site : Main.allowedSites) {
+			for (ALL_SITES site : Main.allowedSites) {
 				logger.debug("Collection articles for site : {} ", site);
 
-				IFetchText fetcher = FetchTextFactory
-						.getFetcher(site);
+				IFetchText fetcher = FetchTextFactory.getFetcher(site);
 
 				// new HashMap<String, Article>();
 				Map<String, Article> myArticles = null;
 				try {
 					myArticles = fetcher.getArticles();
-					logger.debug(myArticles.toString());
+					// logger.debug(myArticles.toString());
 				} catch (BusinessException e) {
 					logger.error(e.toString());
 				}
-				
-				saveArticles(myArticles);
+
+				logger.debug(myArticles.toString());
+
+				saveArticles(myArticles, site);
 
 				break;
 
@@ -55,16 +56,16 @@ public class ArticleCollector implements Runnable {
 		}
 	}
 
-	private void saveArticles(Map<String, Article> articles) {
+	private void saveArticles(Map<String, Article> myArticles, ALL_SITES site) {
+		for (String s : myArticles.keySet()) {
+			Article a = myArticles.get(s);
+			Map<String, Object> m = MyUtils.articleToMap(a);
+			IndexResponse response = Main.client.prepareIndex(Main.INDEX, site.toString()).setId(a.getMd5Href())
+					.setSource(m).get();
 
-		for (Article art : articles.values()) {
-			ArticleDao aDo = new ArticleDao(art);
-			try {
-				logger.trace("Recording article : {}", art);
-				aDo.save();
-			} catch (BusinessException e) {
-				logger.error("{}", e);
-			}
+			logger.debug("Article with id {} , title : {}, created {}", response.getId(), a.getTitle(),
+					response.isCreated());
+
 		}
 	}
 }

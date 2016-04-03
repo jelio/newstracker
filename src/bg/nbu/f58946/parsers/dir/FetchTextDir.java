@@ -4,12 +4,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import bg.nbu.f58946.bo.Site;
+import bg.nbu.f58946.bo.ALL_SITES;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.parsers.AFetchText;
 
 public class FetchTextDir extends AFetchText {
-	public FetchTextDir(Site site) {
+	public FetchTextDir(ALL_SITES site) {
 		super(site);
 		// TODO Auto-generated constructor stub
 	}

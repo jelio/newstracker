@@ -1,5 +1,8 @@
 package bg.nbu.f58946.bo;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Article {
 	private String md5Href;
@@ -7,10 +10,10 @@ public class Article {
 	private String content;
 	private String md5Content;
 	private String title;
-	private String author ; 
-	private int siteId ; 
-	private int id; 
-	
+	private String author;
+	private String siteId;
+	private int id;
+
 	/**
 	 * @return the md5Href
 	 */
@@ -75,7 +78,6 @@ public class Article {
 		return this;
 	}
 
-
 	/**
 	 * @return the title
 	 */
@@ -84,7 +86,8 @@ public class Article {
 	}
 
 	/**
-	 * @param title the title to set
+	 * @param title
+	 *            the title to set
 	 */
 	public Article setTitle(String title) {
 		this.title = title;
@@ -94,38 +97,37 @@ public class Article {
 	/**
 	 * @return the siteId
 	 */
-	public int getSiteId() {
+	public String getSiteId() {
 		return siteId;
 	}
 
 	/**
-	 * @param siteId the siteId to set
+	 * @param string
+	 *            the siteId to set
 	 */
-	public void setSiteId(int siteId) {
-		this.siteId = siteId;
+	public void setSiteId(String string) {
+		this.siteId = string;
 	}
 
-	
+	public Map<String, Object> toMap() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", getTitle());
+		if (getAuthor() != null) {
+			map.put("author", getAuthor());
+		}
+		map.put("content", getContent());
+		map.put("insert_date", new Date());
+		map.put("md5_content", getMd5Content());
+
+		return map;
+	}
 
 	@Override
 	public String toString() {
-		StringBuilder b = new StringBuilder() ; 
-		b.append("\nId : ")
-			.append(id)
-			.append("\ttitle : ")
-			.append(title)
-			.append("\thref : ")
-			.append(href) 
-			.append("\tsite id : ")
-			.append(siteId)	
-			.append("\tmd5 href : ")
-			.append(md5Href)
-			.append("\tmd5Content : ")
-			.append(md5Content)
-			.append("\tContent : ")
-			.append(content)
-			.append("\tAuthor : ")
-			.append(author); 
+		StringBuilder b = new StringBuilder();
+		b.append("\nId : ").append(id).append("\ttitle : ").append(title).append("\thref : ").append(href)
+				.append("\tsite id : ").append(siteId).append("\tmd5 href : ").append(md5Href).append("\tmd5Content : ")
+				.append(md5Content).append("\tContent : ").append(content).append("\tAuthor : ").append(author);
 		return b.toString();
 	}
 
@@ -137,7 +139,8 @@ public class Article {
 	}
 
 	/**
-	 * @param author the author to set
+	 * @param author
+	 *            the author to set
 	 */
 	public void setAuthor(String author) {
 		this.author = author;
@@ -151,11 +154,11 @@ public class Article {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
-	
 
 }

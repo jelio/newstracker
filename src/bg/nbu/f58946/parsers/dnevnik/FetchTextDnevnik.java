@@ -6,7 +6,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import bg.nbu.f58946.bo.Site;
+import bg.nbu.f58946.bo.ALL_SITES;
 import bg.nbu.f58946.exceptions.BusinessException;
 import bg.nbu.f58946.parsers.AFetchText;
 
@@ -16,11 +16,13 @@ public class FetchTextDnevnik extends AFetchText {
 	final static Logger logger = LoggerFactory
 			.getLogger(FetchTextDnevnik.class);
 
-	public FetchTextDnevnik(Site s) {
-		super(s);
+	public FetchTextDnevnik(ALL_SITES site) {
+		super(site);
 	}
-
-	@Override
+	/**
+	 * takes all content in div.article
+	 */
+	@Override	
 	public String getArticleText(Document doc) throws BusinessException {
 		Elements matchedArticles = doc.select("div." + className);
 
